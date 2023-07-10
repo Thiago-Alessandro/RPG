@@ -4,14 +4,19 @@ public abstract class Personagem {
     int vida;
     int ataque;
     int defesa;
-    int movimento;
-    int alcance;
-    int x;
-    int y;
+    int defesaMax;
+    //int movimento;
+    //int alcance;
+    int custo;
+     int x;
+     int y;
+     Jogador jogador;
 
-    public abstract void atacar(Personagem inimigo);
+    public abstract void atacar(Partida partida);
+
+    public abstract Personagem verificarInimigoNoCaminho(Partida partida);
     public abstract void defender();
-    public abstract Personagem[][] mover(int x,int y,Personagem listaPersonagens[][]);
+    // public abstract Personagem[][] mover(int x,int y,Personagem listaPersonagens[][]);
     public abstract void curar();
 
 }
