@@ -1,7 +1,15 @@
-public class Covarde extends Personagem{
+public class Covarde extends Humano{
 
     public Covarde(){
         super(3,2,1,0);
+        this.descricao = """
+                            Covarde
+                Seguidor da famosa filosofia de "dar
+                o tapa e esconder a mão", o covarde
+                se esconde atrás de seus aliados, ele
+                não é muito forte, mas sabe exatamente
+                em quem bater... (Obs: ele odeia gregos)
+                """;
     }
 
     @Override

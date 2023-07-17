@@ -1,7 +1,14 @@
-public class Floricultora extends Personagem{
+public class Floricultora extends Humano{
 
     public Floricultora(){
         super(5, 0, 3, 2);
+        this.descricao = """
+                            Floricultora
+                Amante de toda as flores e plantas.
+                Não subestime seu poder, as vezes ela
+                só precisa de um espaço para fazer seu
+                jardim;
+                """;
     }
 
     @Override

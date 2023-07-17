@@ -1,7 +1,18 @@
-public class EspadachimVesgo extends Personagem{
+public class EspadachimVesgo extends Humano{
 
     public EspadachimVesgo(){
         super(2,1,3,0);
+        this.descricao = """
+                        Espadachim Vesgo
+                Se você for para o campo de batalha
+                e se deparar com um espadachim em sua
+                frente você vai tremer como vara verde,
+                a não ser que você encontre este aqui...
+                O espadachim vesgo possui a habilidade
+                incrivel de manter seus olhos em dois
+                inimigos de uma vez só! entretanto ele
+                não é muito bom em olhar para frente... 
+                """;
     }
 
     @Override

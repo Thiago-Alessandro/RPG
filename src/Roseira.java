@@ -1,7 +1,13 @@
 public class Roseira extends Planta{
 
     public Roseira(){
-        super(0,1,3,1);
+        super(0,1,3,1);this.listaEfeitosCausados.add(new Espinhos(null));
+        this.descricao = """
+                          Roseira
+                Toda rosa tem seu espinho...
+                Obs: são as favoritinhas da
+                floricultora
+                """;
     }
 
     @Override

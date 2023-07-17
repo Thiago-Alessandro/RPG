@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public abstract class Personagem {
 
     int vidaMax;
@@ -5,12 +7,13 @@ public abstract class Personagem {
     int ataque;
     int defesa;
     int defesaMax;
-    //int movimento;
-    //int alcance;
      int custo;
      int x;
      int y;
      Jogador jogador;
+     String descricao;
+     ArrayList<Efeito> listaEfeitosSofridos;
+     ArrayList<Efeito> listaEfeitosCausados;
 
      public Personagem(int custo, int ataque, int vidaMax, int defesaMax ){
 
@@ -23,12 +26,16 @@ public abstract class Personagem {
 
      }
 
-
     public abstract void defender();
     // public abstract Personagem[][] mover(int x,int y,Personagem listaPersonagens[][]);
     public abstract void curar(int cura);
 
     public abstract void atacar(Partida partida);
+
+    public void sacrificar(Partida partida){
+        partida.tabuleiro[this.x][this.y] = null;
+        this.jogador.totalRecursos ++;
+    }
 
     public void atacarOficial(Partida partida, Personagem inimigo){
 
@@ -41,8 +48,10 @@ public abstract class Personagem {
                 inimigo.vida-=ataqueTotal;
             }else if(inimigo.vida - ataqueTotal == 0){
                 partida.tabuleiro[inimigo.x][inimigo.y] = null;
+                this.jogador.totalRecursos ++;
             }else{
                 partida.tabuleiro[inimigo.x][inimigo.y] = null;
+                this.jogador.totalRecursos ++;
                 partida.setPontuacao(this.jogador, (inimigo.vida - ataqueTotal)*-1);
             }
         }
@@ -156,6 +165,53 @@ public abstract class Personagem {
             }
         }
         return  null;
+    }
+
+    public String getDescricao(){
+        return descricao;
+    }
+
+    public ArrayList<Efeito> getEfeitosCausados(){
+        return listaEfeitosCausados;
+    }
+
+    public ArrayList<Efeito> getEfeitosSofridos(){
+        return listaEfeitosSofridos;
+    }
+
+    @Override
+    public String toString() {
+        return
+                this.getClass() +
+                "\nVida Máxima: " + vidaMax +
+                "\nVida: " + vida +
+                "\nAtaque: " + ataque +
+                "\nDefesa: " + defesa +
+                "\nDefesa Máxima: " + defesaMax +
+                "\nCusto: " + custo +
+                "\nJogador: " + jogador +
+//                ", listaEfeitosSofridos=" + listaEfeitosSofridos + //cpa fazer um to string melhor so das listas de efeitos
+//                ", getListaEfeitosCausados=" + getListaEfeitosCausados +
+                '}';
+    }
+    public String mostrarEfeitosSofridos(){
+        String efeitosSofridos = "";
+        int indice = 1;
+        for(Efeito efeito : this.listaEfeitosSofridos){
+            efeitosSofridos += "\n" + indice + " - " + efeito;
+            indice++;
+        }
+        return efeitosSofridos;
+    }
+
+    public String mostrarEfeitosCausados(){
+        String efeitosCausados = "";
+        int indice = 1;
+        for(Efeito efeito : this.listaEfeitosCausados){
+            efeitosCausados += "\n" + indice + " - " + efeito;
+            indice++;
+        }
+        return efeitosCausados;
     }
 
 }

@@ -1,7 +1,14 @@
-public class Guerreiro extends Personagem{
+public class Guerreiro extends Humano{
 
     public Guerreiro(){
         super(0,2,5,0);
+        this.descricao = """
+                            Guerreiro
+                O guerreiro é a tropa inicial
+                fundamental de qualoquer exército,
+                de vez em quando aparece um querendo
+                se juntar à batalha.
+                """;
     }
 
     @Override
