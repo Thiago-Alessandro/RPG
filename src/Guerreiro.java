@@ -1,7 +1,7 @@
 public class Guerreiro extends Humano{
 
-    public Guerreiro(){
-        super("Guerreiro",0,2,5,0);
+    public Guerreiro(Jogador jogador){
+        super("Guerreiro",0,2,5,0, jogador);
         this.descricao = """
                             Guerreiro
                 O guerreiro é a tropa inicial
@@ -13,7 +13,8 @@ public class Guerreiro extends Humano{
 
     @Override
     public void atacar(Partida partida) {
-        if (this.y == 1 || this.y == 2) {
+        System.out.println("entrei ataque");
+        if (this.y == 2) {
             Personagem inimigo = getInimigoAFrente(partida);
             if (inimigo != null) {
                 atacarOficial(partida, inimigo);

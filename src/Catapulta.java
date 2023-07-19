@@ -1,7 +1,7 @@
 public class Catapulta extends Personagem{
 
-    public Catapulta(){
-        super("Catapulta",2,2,4,2);
+    public Catapulta(Jogador jogador){
+        super("Catapulta",2,2,4,2, jogador);
         this.descricao = """
                             Catapulta
                 Muitos obstáculos no seu caminho?

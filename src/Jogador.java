@@ -11,25 +11,30 @@ public class Jogador {
 
         this.nome = nome;
         for(int i = 0; i < 2; i++){
-            this.cartasDeck.add(new Catapulta());
-            this.cartasDeck.add(new Covarde());
-            this.cartasDeck.add(new Floricultora());
-            this.cartasNaMao.add(new Guerreiro());
+            this.cartasDeck.add(new Catapulta(this));
+            this.cartasDeck.add(new Covarde(this));
+            this.cartasDeck.add(new Floricultora(this));
+            this.cartasNaMao.add(new Guerreiro(this));
         }
         for(int i =0;i<3;i++){
-            this.cartasDeck.add(new EspadachimVesgo());
-            this.cartasDeck.add(new Guerreiro());
+            this.cartasDeck.add(new EspadachimVesgo(this));
+            this.cartasDeck.add(new Guerreiro(this));
         }
     }
 
-    public void comprarCarta(){
-        Collections.shuffle(this.cartasDeck);
+    public Personagem comprarCarta(){
+        if(this.totalRecursos > 0){
 
-        this.cartasNaMao.add(this.cartasDeck.get(0));
-        this.cartasDeck.remove(0);
+            Collections.shuffle(this.cartasDeck);
+            Personagem cartaComprada = this.cartasDeck.get(0);
 
-        this.totalRecursos --;
+            this.cartasNaMao.add(cartaComprada);
+            this.cartasDeck.remove(cartaComprada);
 
+            this.totalRecursos --;
+            return cartaComprada;
+        }
+        return null;
     }
 
     public Personagem selecionarCartaDaMao(int indice){
@@ -46,7 +51,7 @@ public class Jogador {
         String cartasNaMao = "";
         int indice = 1;
         for(Personagem personagem : this.cartasNaMao){
-            cartasNaMao += "\n" + indice + " - " + personagem.getClass();
+            cartasNaMao += "\n" + indice + " - " + personagem.nome;
             indice++;
         }
         return cartasNaMao;

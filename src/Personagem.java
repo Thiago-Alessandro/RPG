@@ -17,7 +17,7 @@ public abstract class Personagem {
      ArrayList<Efeito> listaEfeitosSofridos;
      ArrayList<Efeito> listaEfeitosCausados;
 
-     public Personagem( String nome, int custo, int ataque, int vidaMax, int defesaMax){
+     public Personagem(String nome, int custo, int ataque, int vidaMax, int defesaMax, Jogador jogador){
 
          this.custo = custo;
          this.ataque = ataque;
@@ -27,6 +27,7 @@ public abstract class Personagem {
          this.defesa = defesaMax;
          this.turnosParaRecuperarDefesa = 2;
          this.nome = nome;
+         this.jogador = jogador;
      }
 
     public abstract void defender();
@@ -65,7 +66,7 @@ public abstract class Personagem {
 
             if(partida.tabuleiro[this.y+1][this.x]!=null){
                 return partida.tabuleiro[this.y+1][this.x];
-            } else if (partida.tabuleiro[this.y+1][this.x]!=null) {
+            } else if (partida.tabuleiro[this.y+2][this.x]!=null) {
                 return partida.tabuleiro[this.y+2][this.x];
             }
         }else{
@@ -189,15 +190,16 @@ public abstract class Personagem {
 
     public String mostrarDetalhes() {
         return
-                this.getClass() +
+                this.nome +
                 "\nVida Máxima: " + vidaMax +
                 "\nVida: " + vida +
                 "\nAtaque: " + ataque +
                 "\nDefesa: " + defesa +
                 "\nDefesa Máxima: " + defesaMax +
-                "\nCusto: " + custo +
-                "\nJogador: " + jogador;
-//                ", listaEfeitosSofridos=" + listaEfeitosSofridos + //cpa fazer um to string melhor so das listas de efeitos
+                "\nCusto: " + custo;
+               // "\nJogador: " + jogador;
+
+//                ", listaEfeitosSofridos=" + listaEfeitosSofridos + //cpa implementar os toString
 //                ", getListaEfeitosCausados=" + getListaEfeitosCausados +
     }
     public String mostrarEfeitosSofridos(){

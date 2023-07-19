@@ -1,7 +1,7 @@
 public class EspadachimVesgo extends Humano{
 
-    public EspadachimVesgo(){
-        super("Espadachim Vesgo",2,1,3,0);
+    public EspadachimVesgo(Jogador jogador){
+        super("Espadachim Vesgo",2,1,3,0, jogador);
         this.descricao = """
                         Espadachim Vesgo
                 Se você for para o campo de batalha

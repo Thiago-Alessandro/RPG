@@ -1,7 +1,7 @@
 public class Floricultora extends Humano{
 
-    public Floricultora(){
-        super("Floricultora",5, 0, 3, 2);
+    public Floricultora(Jogador jogador){
+        super("Floricultora",5, 0, 3, 2, jogador);
         this.descricao = """
                             Floricultora
                 Amante de toda as flores e plantas.
@@ -17,10 +17,10 @@ public class Floricultora extends Humano{
         Personagem aliadoAEsquerda = getAliadoAEsquerda(partida);
         if(this.y == 1 || this.y ==2) {
             if (aliadoADireita == null) {
-                aliadoADireita = new Roseira();
+                aliadoADireita = new Roseira(partida.jogadorDaVez);
             }
             if (aliadoAEsquerda == null) {
-                aliadoAEsquerda = new Roseira();
+                aliadoAEsquerda = new Roseira(partida.jogadorDaVez);
             }
         }
         if(aliadoADireita != null && aliadoAEsquerda != null){
