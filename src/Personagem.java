@@ -12,10 +12,12 @@ public abstract class Personagem {
      int y;
      Jogador jogador;
      String descricao;
+     String nome;
+     int turnosParaRecuperarDefesa;
      ArrayList<Efeito> listaEfeitosSofridos;
      ArrayList<Efeito> listaEfeitosCausados;
 
-     public Personagem(int custo, int ataque, int vidaMax, int defesaMax ){
+     public Personagem( String nome, int custo, int ataque, int vidaMax, int defesaMax){
 
          this.custo = custo;
          this.ataque = ataque;
@@ -23,7 +25,8 @@ public abstract class Personagem {
          this.vida = vidaMax;
          this.defesaMax = defesaMax;
          this.defesa = defesaMax;
-
+         this.turnosParaRecuperarDefesa = 2;
+         this.nome = nome;
      }
 
     public abstract void defender();
@@ -33,7 +36,7 @@ public abstract class Personagem {
     public abstract void atacar(Partida partida);
 
     public void sacrificar(Partida partida){
-        partida.tabuleiro[this.x][this.y] = null;
+        partida.tabuleiro[this.y][this.x] = null;
         this.jogador.totalRecursos ++;
     }
 
@@ -47,10 +50,10 @@ public abstract class Personagem {
             if(inimigo.vida-ataqueTotal > 0){
                 inimigo.vida-=ataqueTotal;
             }else if(inimigo.vida - ataqueTotal == 0){
-                partida.tabuleiro[inimigo.x][inimigo.y] = null;
+                partida.tabuleiro[inimigo.y][inimigo.x] = null;
                 this.jogador.totalRecursos ++;
             }else{
-                partida.tabuleiro[inimigo.x][inimigo.y] = null;
+                partida.tabuleiro[inimigo.y][inimigo.x] = null;
                 this.jogador.totalRecursos ++;
                 partida.setPontuacao(this.jogador, (inimigo.vida - ataqueTotal)*-1);
             }
@@ -60,16 +63,16 @@ public abstract class Personagem {
     public Personagem getInimigoAFrente(Partida partida) {
         if(partida.jogador1==this.jogador){
 
-            if(partida.tabuleiro[this.x][this.y+1]!=null){
-                return partida.tabuleiro[this.x][this.y+1];
-            } else if (partida.tabuleiro[this.x][this.y+2]!=null) {
-                return partida.tabuleiro[this.x][this.y+2];
+            if(partida.tabuleiro[this.y+1][this.x]!=null){
+                return partida.tabuleiro[this.y+1][this.x];
+            } else if (partida.tabuleiro[this.y+1][this.x]!=null) {
+                return partida.tabuleiro[this.y+2][this.x];
             }
         }else{
-            if(partida.tabuleiro[this.x][this.y-1]!=null){
-                return partida.tabuleiro[this.x][this.y-1];
-            } else if (partida.tabuleiro[this.x][this.y-2]!=null) {
-                return partida.tabuleiro[this.x][this.y-2];
+            if(partida.tabuleiro[this.y-1][this.x]!=null){
+                return partida.tabuleiro[this.y-1][this.x];
+            } else if (partida.tabuleiro[this.y-2][this.x]!=null) {
+                return partida.tabuleiro[this.y-2][this.x];
             }
         }
         return null;
@@ -79,20 +82,20 @@ public abstract class Personagem {
         if(partida.jogador1==this.jogador){
             if(this.x+1 < 5){
 
-                if(partida.tabuleiro[this.x+1][this.y+1]!=null){
-                    return partida.tabuleiro[this.x+1][this.y+1];
+                if(partida.tabuleiro[this.y+1][this.x+1]!=null){
+                    return partida.tabuleiro[this.y+1][this.x+1];
 
-                } else if(partida.tabuleiro[this.x+1][this.y+2]!=null){
-                    return partida.tabuleiro[this.x+1][this.y+2];
+                } else if(partida.tabuleiro[this.y+2][this.x+1]!=null){
+                    return partida.tabuleiro[this.y+2][this.x+1];
                 }
             }
         } else {
             if(this.x-1 >= 0){
-                if(partida.tabuleiro[this.x+1][this.y-1]!=null){
-                    return partida.tabuleiro[this.x-1][this.y-1];
+                if(partida.tabuleiro[this.y+1][this.x-1]!=null){
+                    return partida.tabuleiro[this.y-1][this.x-1];
 
-                } else if(partida.tabuleiro[this.x-1][this.y-2]!=null) {
-                    return partida.tabuleiro[this.x - 1][this.y - 2];
+                } else if(partida.tabuleiro[this.y - 2][this.x-1]!=null) {
+                    return partida.tabuleiro[this.y - 2][this.x-1];
                 }
             }
         }
@@ -101,22 +104,22 @@ public abstract class Personagem {
 
     public Personagem getInimigoAEsquerda(Partida partida){
         if(partida.jogador1==this.jogador){
-            if(this.x-1 < 5){
+            if(this.x-1 >= 0){
 
-                if(partida.tabuleiro[this.x-1][this.y+1]!=null){
-                    return partida.tabuleiro[this.x-1][this.y+1];
+                if(partida.tabuleiro[this.y+1][this.x-1]!=null){
+                    return partida.tabuleiro[this.y+1][this.x-1];
 
-                } else if(partida.tabuleiro[this.x-1][this.y+2]!=null){
-                    return partida.tabuleiro[this.x-1][this.y+2];
+                } else if(partida.tabuleiro[this.y+2][this.x-1]!=null){
+                    return partida.tabuleiro[this.y+2][this.x-1];
                 }
             }
         } else {
-            if(this.x+1 >= 0){
-                if(partida.tabuleiro[this.x+1][this.y-1]!=null){
-                    return partida.tabuleiro[this.x+1][this.y-1];
+            if(this.x+1 < 5){
+                if(partida.tabuleiro[this.y-1][this.x+1]!=null){
+                    return partida.tabuleiro[this.y-1][this.x+1];
 
-                } else if(partida.tabuleiro[this.x+1][this.y-2]!=null) {
-                    return partida.tabuleiro[this.x + 1][this.y - 2];
+                } else if(partida.tabuleiro[this.y-2][this.x + 1]!=null) {
+                    return partida.tabuleiro[this.y-2][this.x + 1];
                 }
             }
         }
@@ -127,13 +130,13 @@ public abstract class Personagem {
 
         if(partida.jogador1 == this.jogador){
 
-            if(partida.tabuleiro[this.x][this.y+2]!=null){
-                return partida.tabuleiro[this.x][this.y+2];
+            if(partida.tabuleiro[this.y+2][this.x]!=null){
+                return partida.tabuleiro[this.y+2][this.x];
             }
         } else {
 
-            if(partida.tabuleiro[this.x][this.y-2]!=null){
-                return partida.tabuleiro[this.x][this.y-2];
+            if(partida.tabuleiro[this.y-2][this.x]!=null){
+                return partida.tabuleiro[this.y-2][this.x];
             }
         }
       return null;
@@ -142,12 +145,12 @@ public abstract class Personagem {
     public Personagem getAliadoADireita(Partida partida){
 
         if(partida.jogador1 == this.jogador){
-            if(partida.tabuleiro[this.x+1][this.y]!=null){
-                return partida.tabuleiro[this.x+1][this.y];
+            if(partida.tabuleiro[this.y][this.x+1]!=null){
+                return partida.tabuleiro[this.y][this.x+1];
             }
         } else {
-            if(partida.tabuleiro[this.x-1][this.y]!=null){
-                return partida.tabuleiro[this.x-1][this.y];
+            if(partida.tabuleiro[this.y][this.x-1]!=null){
+                return partida.tabuleiro[this.y][this.x-1];
             }
         }
         return  null;
@@ -156,12 +159,12 @@ public abstract class Personagem {
     public Personagem getAliadoAEsquerda(Partida partida){
 
         if(partida.jogador1 == this.jogador){
-            if(partida.tabuleiro[this.x-1][this.y]!=null){
-                return partida.tabuleiro[this.x-1][this.y];
+            if(partida.tabuleiro[this.y][this.x-1]!=null){
+                return partida.tabuleiro[this.y][this.x-1];
             }
         } else {
-            if(partida.tabuleiro[this.x+1][this.y]!=null){
-                return partida.tabuleiro[this.x+1][this.y];
+            if(partida.tabuleiro[this.y][this.x+1]!=null){
+                return partida.tabuleiro[this.y][this.x+1];
             }
         }
         return  null;
@@ -181,6 +184,10 @@ public abstract class Personagem {
 
     @Override
     public String toString() {
+        return nome;
+    }
+
+    public String mostrarDetalhes() {
         return
                 this.getClass() +
                 "\nVida Máxima: " + vidaMax +
@@ -189,10 +196,9 @@ public abstract class Personagem {
                 "\nDefesa: " + defesa +
                 "\nDefesa Máxima: " + defesaMax +
                 "\nCusto: " + custo +
-                "\nJogador: " + jogador +
+                "\nJogador: " + jogador;
 //                ", listaEfeitosSofridos=" + listaEfeitosSofridos + //cpa fazer um to string melhor so das listas de efeitos
 //                ", getListaEfeitosCausados=" + getListaEfeitosCausados +
-                '}';
     }
     public String mostrarEfeitosSofridos(){
         String efeitosSofridos = "";

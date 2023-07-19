@@ -9,6 +9,7 @@ public class Sangramento extends Efeito{
                 Você não acha que o nome é
                 autoexplicativo?
                 """;
+        this.fatorSangramento = 1;
     }
 
     @Override

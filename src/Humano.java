@@ -1,5 +1,5 @@
 public abstract class Humano extends Personagem{
-    public Humano(int custo, int ataque, int vidaMax, int defesaMax) {
-        super(custo, ataque, vidaMax, defesaMax);
+    public Humano(String nome,int custo, int ataque, int vidaMax, int defesaMax) {
+        super(nome, custo, ataque, vidaMax, defesaMax);
     }
 }

@@ -1,7 +1,7 @@
 public class EspadachimVesgo extends Humano{
 
     public EspadachimVesgo(){
-        super(2,1,3,0);
+        super("Espadachim Vesgo",2,1,3,0);
         this.descricao = """
                         Espadachim Vesgo
                 Se você for para o campo de batalha
@@ -17,22 +17,22 @@ public class EspadachimVesgo extends Humano{
 
     @Override
     public void atacar(Partida partida) {
+        if(this.y == 1 || this.y == 2) {//se estiver na linha de frente
+            Personagem inimigoADireita = getInimigoADireita(partida);//cpa da p passar isso p atacarOficial tbm
+            Personagem inimigoAEsquerda = getInimigoAEsquerda(partida);
 
-        Personagem inimigoADireita = getInimigoADireita(partida);//cpa da p passar isso p atacarOficial tbm
-        Personagem inimigoAEsquerda = getInimigoAEsquerda(partida);
+            if (inimigoADireita != null) {
+                atacarOficial(partida, inimigoADireita);
+            } else {
+                partida.setPontuacao(this.jogador, this.ataque);
+            }
 
-        if(inimigoADireita!=null){
-            atacarOficial(partida, inimigoADireita);
-        } else {
-            partida.setPontuacao(this.jogador, this.ataque);
+            if (inimigoAEsquerda != null) {
+                atacarOficial(partida, inimigoAEsquerda);
+            } else {
+                partida.setPontuacao(this.jogador, this.ataque);
+            }
         }
-
-        if(inimigoAEsquerda!=null){
-            atacarOficial(partida, inimigoAEsquerda);
-        } else {
-            partida.setPontuacao(this.jogador, this.ataque);
-        }
-
     }
 
     @Override

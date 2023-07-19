@@ -3,9 +3,9 @@ import java.util.Collections;
 
 public class Jogador {
     String nome;
-    ArrayList<Personagem> cartasDeck;
-    ArrayList<Personagem> cartasNaMao;
-    int totalRecursos;
+    ArrayList<Personagem> cartasDeck = new ArrayList<>();
+    ArrayList<Personagem> cartasNaMao = new ArrayList<>();
+    int totalRecursos = 0;
 
     public Jogador(String nome){
 
@@ -52,4 +52,13 @@ public class Jogador {
         return cartasNaMao;
     }
 
+    public String mostrarEstatisticas(){
+        return "Total Recursos: " + this.totalRecursos +
+               "Cartas restantes no baralho: " + this.cartasDeck.size();
+    }
+
+    @Override
+    public String toString() {
+        return "Nome: " + nome;
+    }
 }

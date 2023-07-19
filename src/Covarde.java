@@ -1,7 +1,7 @@
 public class Covarde extends Humano{
 
     public Covarde(){
-        super(3,2,1,0);
+        super("Covarde",3,2,1,0);
         this.descricao = """
                             Covarde
                 Seguidor da famosa filosofia de "dar
