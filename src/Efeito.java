@@ -1,33 +1,45 @@
 public abstract class Efeito{
 
-    public  Efeito(int duracao,Personagem personagem){
+    public  Efeito(int duracao,Personagem personagem, String nome){
         this.duracao = duracao;
         this.personagem = personagem;
+        this.nome = nome;
     }
-    int duracao;
-    Personagem personagem;
-
-    String descricao;
+    private final String nome;
+    private int duracao;
+    private Personagem personagem;
+    private String descricao;
 
     public abstract void efetuar();
 
-    public boolean verificarPossuiEfeito(Personagem personagem, Efeito efeito){
-        for(Efeito efeitoSofrido : personagem.listaEfeitosSofridos){
-            if(efeito.equals(efeitoSofrido)){
-                efeitoSofrido.duracao+=efeito.duracao;
-                return true;
-            }
-        }
-        return false;
+    //region getters e setters
+    public int getDuracao() {
+        return duracao;
     }
 
-    public String getDescricao(){
-        return descricao;
+    public void setDuracao(int duracao) {
+        this.duracao = duracao;
     }
 
+    public Personagem getPersonagem() {
+        return personagem;
+    }
+
+    public void setPersonagem(Personagem personagem) {
+        this.personagem = personagem;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+    //endregion
     @Override
     public String toString() {
-        return  "\t" + this.getClass() +
+        return   descricao +
                 "\nDuracao: " + duracao;
     }
 }

@@ -2,41 +2,28 @@ public class Guerreiro extends Humano{
 
     public Guerreiro(Jogador jogador){
         super("Guerreiro",0,2,5,0, jogador);
-        this.descricao = """
+        this.setDescricao("""
                             Guerreiro
                 O guerreiro é a tropa inicial
                 fundamental de qualoquer exército,
                 de vez em quando aparece um querendo
                 se juntar à batalha.
-                """;
+                """);
     }
 
     @Override
-    public void atacar(Partida partida) {
+    public void getInimigoAAtacar(Partida partida) {
         System.out.println("entrei ataque");
-        if (this.y == 2) {
+        System.out.println("y " + this.getY());
+        System.out.println("x " + this.getY());
+        if (this.getY() == 1 || this.getY() == 2) {
+            System.out.println("entrei if");
             Personagem inimigo = getInimigoAFrente(partida);
             if (inimigo != null) {
-                atacarOficial(partida, inimigo);
+                atacar(partida, inimigo);
             } else {
-                partida.setPontuacao(this.jogador, this.ataque);
+                partida.setPontuacao(this.getJogador(), this.getAtaque());
             }
-        }
-    }
-
-    @Override
-    public void defender() {
-        if(this.defesa < this.defesaMax){
-            this.defesa += 1;
-        }
-    }
-
-    @Override
-    public void curar(int cura) {
-        if(this.vida + cura >= this.vidaMax){
-            this.vida = this.vidaMax;
-        } else {
-            this.vida += cura;
         }
     }
 }

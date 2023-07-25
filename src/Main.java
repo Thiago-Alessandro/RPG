@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -18,29 +19,28 @@ public class Main {
 
         Partida partida = new Partida(jogador1, jogador2);
 
-        System.out.println("\n\t" + jogador1.nome + " faça +10 pontos para vencer");
-        System.out.println("\n\t" + jogador2.nome + " faça -10 pontos para vencer");
+        System.out.println("\n\t" + jogador1.getNome() + " faça +10 pontos para vencer");
+        System.out.println("\n\t" + jogador2.getNome() + " faça -10 pontos para vencer");
         do{
-            System.out.println("\n\tTurno: " + partida.turno);
-            System.out.println("\tPontuação: " + partida.pontuacao + "\n");
-            System.out.println("\t" + partida.jogadorDaVez.nome + " é a sua vez!\n");
+            Jogador jogadorDaVez = partida.getJogadorDaVez();
+            System.out.println("\n\tTurno: " + partida.getTurno());
+            System.out.println("\tPontuação: " + partida.getPontuacao() + "\n");
+            System.out.println("\t" + jogadorDaVez.getNome() + " é a sua vez!\n");
             boolean primeiraJogada = true;
             boolean terminarTurno = false;
             partida.personagensAtacar(partida);
-            partida.trazerPersonagensParaFrente();
-            partida.personagensRecuperarDefesa();
             do {
                 System.out.println(partida.mostrarTabuleiro());
                 switch (menuOpcoes()) {
-                    case 1:
-                        Personagem cartaSelecionada = selecionarCarta(partida.jogadorDaVez);
-                        if(cartaSelecionada != null) {
+                    case 1 -> {
+                        Personagem cartaSelecionada = selecionarCarta(jogadorDaVez);
+                        if (cartaSelecionada != null) {
                             boolean voltar = false;
 
                             do {
                                 switch (menuCarta(cartaSelecionada)) {
-                                    case 1:
-                                        if (partida.jogadorDaVez.totalRecursos - cartaSelecionada.custo >= 0) {
+                                    case 1 -> {
+                                        if (jogadorDaVez.getTotalRecursos() - cartaSelecionada.getCusto() >= 0) {
                                             System.out.println(partida.mostrarTabuleiro());
                                             posicionarCarta(partida, cartaSelecionada);
                                             primeiraJogada = false;
@@ -48,89 +48,107 @@ public class Main {
                                         } else {
                                             System.out.println("\tVocê não possui recursos suficientes!\n");
                                         }
-                                        break;
-                                    case 2:
-                                        System.out.println(cartaSelecionada.mostrarDetalhes());
-                                        break;
-                                    case 3:
-                                        System.out.println(cartaSelecionada.getDescricao());
-                                        break;
-                                    case 4:
-                                        System.out.println(cartaSelecionada.mostrarEfeitosCausados());
-                                        break;
-                                    case 5:
-                                        System.out.println(cartaSelecionada.mostrarEfeitosSofridos());
-                                        break;
-                                    case 0:
-                                        voltar = true;
-                                        break;
-                                    default:
-                                        System.out.println("\tInsira uma opção válida!\n");
-                                        break;
+                                    }
+                                    case 2 -> System.out.println(cartaSelecionada.mostrarDetalhes());
+                                    case 3 -> System.out.println(cartaSelecionada.getDescricao());
+                                    case 4 -> {
+                                        int indice;
+                                        do {
+                                            System.out.println(cartaSelecionada.mostrarEfeitosCausados());
+                                            indice = sc.nextInt();
+                                            if (indice != 0) {
+                                                if (indice > cartaSelecionada.getListaEfeitosCausados().size() ||
+                                                        indice < 0) {
+                                                    System.out.println("\tInsira uma opcao válida\n");
+                                                } else {
+                                                    System.out.println(cartaSelecionada.getListaEfeitosCausados().get(indice - 1));
+                                                }
+                                            }
+                                        }while(indice != 0);
+                                    }
+                                    case 5 ->
+                                    {
+                                        int indice;
+                                        do {
+                                            System.out.println(cartaSelecionada.mostrarEfeitosSofridos());
+                                            indice = sc.nextInt();
+                                            if (indice != 0) {
+                                                if (indice > cartaSelecionada.getListaEfeitosSofridos().size() ||
+                                                        indice < 0) {
+                                                    System.out.println("\tInsira uma opcao válida\n");
+                                                } else {
+                                                    System.out.println(cartaSelecionada.getEfeitosSofridos().get(indice - 1));
+                                                }
+                                            }
+                                        }while(indice != 0);
+                                    }
+                                    case 0 -> voltar = true;
+                                    default -> System.out.println("\tInsira uma opção válida!\n");
                                 }
                             } while (!voltar);
                         } else {
                             System.out.println("Você não possui cartas na mão, compre uma!");
                         }
-                        break;
-                    case 2:
-                        if(sacrificarPersonagem(partida)){
+                    }
+                    case 2 -> {
+                        if (sacrificarPersonagem(partida)) {
                             primeiraJogada = false;
                         }
-                        break;
-                    case 3:
-                        if(partida.jogadorDaVez.cartasDeck.size()>0) {
-                            Personagem cartaComprada = partida.jogadorDaVez.comprarCarta();
+                    }
+                    case 3 -> {
+                        if (jogadorDaVez.getCartasDeck().size() > 0) {
+                            Personagem cartaComprada = jogadorDaVez.comprarCarta();
                             if (cartaComprada != null) {
-                                System.out.println("\tVocê comprou: " + cartaComprada.nome + "!");
-                                System.out.println("\tSeus recursos agora são: " + partida.jogadorDaVez.totalRecursos + "\n");
-                                System.out.println("\tSeu baralho agora tem: " + partida.jogadorDaVez.cartasDeck.size() + " cartas\n");
+                                System.out.println("\tVocê comprou: " + cartaComprada.getNome() + "!");
+                                System.out.println("\tSeus recursos agora são: " + jogadorDaVez.getTotalRecursos() + "\n");
+                                System.out.println("\tSeu baralho agora tem: " + jogadorDaVez.getCartasDeck().size() + " cartas\n");
                                 primeiraJogada = false;
                             } else {
-                                System.out.println("\tVocê não tem recursos suficientes!\n" +
-                                        " \tTente sacrificar um personagem ou procurar recursos\n");
+                                System.out.println("""
+                                        \tVocê não tem recursos suficientes!
+                                         \tTente sacrificar um personagem ou procurar recursos
+                                        """);
                             }
                         } else {
-                            System.out.println("\tOps parece que acabaram suas cartas\n" +
-                                    "\tEspere por um guerreiro corajoso que se junte à batalha!\n");
+                            System.out.println("""
+                                    \tOps parece que acabaram suas cartas
+                                    \tEspere por um guerreiro corajoso que se junte à batalha!
+                                    """);
                         }
-                        break;
-                    case 4:
-                        System.out.println(partida.jogadorDaVez.mostrarEstatisticas());
-                        break;
-                    case 5:
-                        System.out.println(partida.mostrarEstatisticas());
-                        break;
-                    case 6:
-                        if(primeiraJogada){
-                            partida.jogadorDaVez.totalRecursos++;
+                    }
+                    case 4 -> System.out.println(jogadorDaVez.mostrarEstatisticas());
+                    case 5 -> System.out.println(partida.mostrarEstatisticas());
+                    case 6 -> {
+                        if (primeiraJogada) {
+                            partida.getJogadorDaVez().setTotalRecursos(partida.getJogadorDaVez().getTotalRecursos()+1);
                             terminarTurno = true;
                         } else {
                             System.out.println("\tVocê só pode procurar recursos na primeira jogada de cada turno!\n");
                         }
-                        break;
-                    case 0:
-                        if(primeiraJogada){
+                    }
+                    case 0 -> {
+                        if (primeiraJogada) {
                             System.out.println("\tTente realizar uma jogada ou gastar seu turno procurando recursos!\n");
-                        }else{
+                        } else {
                             terminarTurno = true;
                         }
-                        break;
-                    default:
-                        System.out.println("\nInsira uma opção válida!\n");
-                        break;
+                    }
+                    default -> System.out.println("\nInsira uma opção válida!\n");
                 }
             }while(!terminarTurno);
             partida.alternarJogadorDaVez();
             //cada 2 turnos sem contar o primneiro adiciona um guerreiro
-            if(partida.turno != 1 && partida.turno % 2 == 1){
-                partida.jogadorDaVez.cartasDeck.add(new Guerreiro(partida.jogadorDaVez));
+            if(partida.getTurno() != 1 && partida.getTurno() % 2 == 1){
+                ArrayList<Personagem> maoAtualizada = jogadorDaVez.getCartasNaMao();
+                maoAtualizada.add(new Guerreiro(jogadorDaVez));
+                jogadorDaVez.setCartasNaMao(maoAtualizada);
+                System.out.println("\tUm guerreiro se juntou à batalha!\n");
             }
-        }while(partida.vencedor == null);
-        System.out.println("\tParabéns " + partida.vencedor.nome + "! Você ganhou!\n");
+        }while(partida.getVencedor() == null);
+        System.out.println("\tParabéns " + partida.getVencedor().getNome() + "! Você ganhou!\n");
     }
 
-    public static int menuOpcoes(){
+    private static int menuOpcoes(){
         System.out.println("""
                     O que deseja fazer
                 1 - Selecionar carta na mão
@@ -144,8 +162,8 @@ public class Main {
         return sc.nextInt();
     }
 
-    public static Personagem selecionarCarta(Jogador jogador){
-        if(jogador.cartasNaMao.size()>0) {
+    private static Personagem selecionarCarta(Jogador jogador){
+        if(jogador.getCartasNaMao().size()>0) {
             Personagem cartaSelecionada;
             do {
                 System.out.println("\n\tSuas cartas: " + jogador.mostarCartasMao());
@@ -160,7 +178,7 @@ public class Main {
         return null;
     }
 
-    public static int menuCarta(Personagem carta){
+    private static int menuCarta(Personagem carta){
         System.out.printf("""
                     %s
                 1 - Posicionar carta
@@ -170,59 +188,60 @@ public class Main {
                 5 - Ver efeitos sofridos
                 0 - Voltar
                 \n
-                """, carta.nome);
+                """, carta.getNome());
         return sc.nextInt();
     }
 
-    public static void posicionarCarta(Partida partida, Personagem carta){
+    private static void posicionarCarta(Partida partida, Personagem carta){
         int coluna;
-        if(partida.jogador1 == partida.jogadorDaVez) {
+        if(partida.getJogador1() == partida.getJogadorDaVez()) {
             do {
                 System.out.println("\tEm qual coluna deseja posicionar sua carta");
                 coluna = sc.nextInt();
                 if (coluna < 1 || coluna > 5) {
                     System.out.println("\tInsira uma coluna valida");
-                } else if (partida.tabuleiro[0][coluna - 1] != null) {
+                } else if (partida.getTabuleiro()[0][coluna - 1] != null) {
                     System.out.println("\tInsira uma posica que esteja livre!\n");
                 }
-            } while (coluna < 1 || coluna > 5 || partida.tabuleiro[0][coluna - 1] != null);
-            partida.tabuleiro[0][coluna-1] = carta;
-            carta.y = 0;
+            } while (coluna < 1 || coluna > 5 || partida.getTabuleiro()[0][coluna - 1] != null);
+            partida.getTabuleiro()[0][coluna-1] = carta;
+            carta.setY(0);
         } else{
             do {
                 System.out.println("\tEm qual coluna deseja posicionar sua carta");
                 coluna = sc.nextInt();
                 if (coluna < 1 || coluna > 5) {
                     System.out.println("\tInsira uma coluna valida");
-                } else if (partida.tabuleiro[3][coluna - 1] != null) {
+                } else if (partida.getTabuleiro()[3][coluna - 1] != null) {
                     System.out.println("\tInsira uma posica que esteja livre!\n");
                 }
-            } while (coluna < 1 || coluna > 5 || partida.tabuleiro[3][coluna - 1] != null);
-            partida.tabuleiro[3][coluna-1] = carta;
-            carta.y = 3;
+            } while (coluna < 1 || coluna > 5 || partida.getTabuleiro()[3][coluna - 1] != null);
+            partida.getTabuleiro()[3][coluna-1] = carta;
+            carta.setY(3);
         }
-        carta.x = coluna-1;
-        carta.jogador = partida.jogadorDaVez; //da p tirar isso daqui no futuro e colocar qnd as cartas forem atribuidas ao jogador
-        partida.jogadorDaVez.cartasNaMao.remove(carta);
-        partida.jogadorDaVez.totalRecursos-=carta.custo;
+        carta.setX(coluna-1);
+        carta.setJogador(partida.getJogadorDaVez()); //da p tirar isso daqui no futuro e colocar qnd as cartas forem atribuidas ao jogador
+        ArrayList<Personagem> arrayAtualizaddo = partida.getJogadorDaVez().getCartasNaMao();
+        arrayAtualizaddo.remove(carta);
+        partida.getJogadorDaVez().setCartasNaMao(arrayAtualizaddo);
+        partida.getJogadorDaVez().setTotalRecursos(partida.getJogadorDaVez().getTotalRecursos() - carta.getCusto());
 
     }
 
-    public static boolean sacrificarPersonagem(Partida partida){
+    private static boolean sacrificarPersonagem(Partida partida){
         int linha;
         int coluna;
-        boolean sair = false;
         do {
             System.out.println(partida.mostrarTabuleiro());
             do {
                 System.out.println("\tDeseja sacrificar o personagem de qual linha?");
                 linha = sc.nextInt();
-                if(partida.jogadorDaVez == partida.jogador1 && linha != 1 && linha != 2 ||
-                   partida.jogadorDaVez == partida.jogador2 && linha != 3 && linha != 4){
+                if(partida.getJogadorDaVez() == partida.getJogador1() && linha != 1 && linha != 2 ||
+                   partida.getJogadorDaVez() == partida.getJogador2() && linha != 3 && linha != 4){
                     System.out.println("\tSelecione uma linha em que possa haver um personagem seu!");
                 }
-            } while (partida.jogadorDaVez == partida.jogador1 && linha != 1 && linha != 2 ||
-                     partida.jogadorDaVez == partida.jogador2 && linha != 3 && linha != 4);
+            } while (partida.getJogadorDaVez() == partida.getJogador1() && linha != 1 && linha != 2 ||
+                     partida.getJogadorDaVez() == partida.getJogador2() && linha != 3 && linha != 4);
             do {
                 System.out.println("\tDeseja sacrificar o personagem de qual coluna?");
                 coluna = sc.nextInt();
@@ -230,31 +249,26 @@ public class Main {
                     System.out.println("\tInsira uma coluna valida\n");
                 }
             }while(coluna < 1 || coluna > 5);
-            if (partida.tabuleiro[linha-1][coluna-1] == null) {
+            if (partida.getTabuleiro()[linha-1][coluna-1] == null) {
                 System.out.println("\tVocê precisa selecionar uma posição que possua um personagem!\n");
                 int opcao;
                 do {
                     System.out.println("\tDeseja cancelar o sacrificio?\n\t1 - Não\n\t2 - Sim");
                     opcao = sc.nextInt();
                     switch (opcao) {
-                        case 1:
-                            sair = false;
-                            break;
-                        case 2:
-                            sair = false;
-                            break;
-                        default:
-                            System.out.println("\tInsira uma opção válida!\n");
-                            break;
+                        case 1 -> {}
+                        case 2 -> {
+                            return false;
+                        }
+                        default -> System.out.println("\tInsira uma opção válida!\n");
                     }
-                }while(opcao != 1 && opcao != 2);
+                }while(opcao != 1);
             }else{
-                partida.tabuleiro[linha-1][coluna-1].sacrificar(partida);
+                partida.getTabuleiro()[linha-1][coluna-1].sacrificar(partida);
                 System.out.println("\tVocê conseguiu +1 recurso(s)!\n");
-                sair = true;
                 return true;
             }
-        }while(partida.tabuleiro[linha-1][coluna-1] == null && !sair);
+        }while(partida.getTabuleiro()[linha-1][coluna-1] == null);
         return false;
     }
 }

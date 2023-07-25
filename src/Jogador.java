@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Jogador {
-    String nome;
-    ArrayList<Personagem> cartasDeck = new ArrayList<>();
-    ArrayList<Personagem> cartasNaMao = new ArrayList<>();
-    int totalRecursos = 0;
+    private final String nome;
+    private ArrayList<Personagem> cartasDeck = new ArrayList<>();
+    private ArrayList<Personagem> cartasNaMao = new ArrayList<>();
+    private int totalRecursos = 0;
 
     public Jogador(String nome){
 
@@ -51,7 +51,7 @@ public class Jogador {
         String cartasNaMao = "";
         int indice = 1;
         for(Personagem personagem : this.cartasNaMao){
-            cartasNaMao += "\n" + indice + " - " + personagem.nome;
+            cartasNaMao += "\n" + indice + " - " + personagem.getNome();
             indice++;
         }
         return cartasNaMao;
@@ -65,5 +65,29 @@ public class Jogador {
     @Override
     public String toString() {
         return "Nome: " + nome;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public ArrayList<Personagem> getCartasDeck() {
+        return cartasDeck;
+    }
+
+    public void setCartasDeck(ArrayList<Personagem> cartasDeck) {
+        this.cartasDeck = cartasDeck;
+    }
+
+    public void setCartasNaMao(ArrayList<Personagem> cartasNaMao) {
+        this.cartasNaMao = cartasNaMao;
+    }
+
+    public int getTotalRecursos() {
+        return totalRecursos;
+    }
+
+    public void setTotalRecursos(int totalRecursos) {
+        this.totalRecursos = totalRecursos;
     }
 }

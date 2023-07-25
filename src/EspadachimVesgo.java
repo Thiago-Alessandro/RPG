@@ -2,7 +2,7 @@ public class EspadachimVesgo extends Humano{
 
     public EspadachimVesgo(Jogador jogador){
         super("Espadachim Vesgo",2,1,3,0, jogador);
-        this.descricao = """
+        this.setDescricao("""
                         Espadachim Vesgo
                 Se você for para o campo de batalha
                 e se deparar com um espadachim em sua
@@ -11,43 +11,28 @@ public class EspadachimVesgo extends Humano{
                 O espadachim vesgo possui a habilidade
                 incrivel de manter seus olhos em dois
                 inimigos de uma vez só! entretanto ele
-                não é muito bom em olhar para frente... 
-                """;
+                não é muito bom em olhar para frente...
+                """);
     }
 
     @Override
-    public void atacar(Partida partida) {
-        if(this.y == 1 || this.y == 2) {//se estiver na linha de frente
+    public void getInimigoAAtacar(Partida partida) {
+        if(this.getY() == 1 || this.getY() == 2) {//se estiver na linha de frente
             Personagem inimigoADireita = getInimigoADireita(partida);//cpa da p passar isso p atacarOficial tbm
             Personagem inimigoAEsquerda = getInimigoAEsquerda(partida);
 
             if (inimigoADireita != null) {
-                atacarOficial(partida, inimigoADireita);
+                atacar(partida, inimigoADireita);
             } else {
-                partida.setPontuacao(this.jogador, this.ataque);
+                partida.setPontuacao(this.getJogador(), this.getAtaque());
             }
 
             if (inimigoAEsquerda != null) {
-                atacarOficial(partida, inimigoAEsquerda);
+                atacar(partida, inimigoAEsquerda);
             } else {
-                partida.setPontuacao(this.jogador, this.ataque);
+                partida.setPontuacao(this.getJogador(), this.getAtaque());
             }
         }
     }
 
-    @Override
-    public void defender() {
-        if(this.defesa < this.defesaMax){
-            this.defesa ++;
-        }
-    }
-
-    @Override
-    public void curar(int cura) {
-        if(this.vida + cura >= this.vidaMax){
-            this.vida = this.vidaMax;
-        } else {
-            this.vida += cura;
-        }
-    }
 }

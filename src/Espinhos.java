@@ -3,29 +3,33 @@ import java.util.ArrayList;
 public class Espinhos extends Efeito{
 
     public Espinhos(Personagem personagem) {
-        super(1, personagem);
-        this.descricao = """
+        super(1, personagem, "Espinhos");
+        this.setDescricao("""
                   Espinhos
                 Doi. Bastante.
-                """;
+                """);
     }
 
     @Override
     public void efetuar() {
-        this.personagem.vida -= 1;
-        if(this.personagem.vida <= 0){
-            this.personagem = null;
+        Personagem personagem = this.getPersonagem();
+        personagem.setVida(personagem.getVida()-1);
+        if(personagem.getVida() <= 0){
+            System.out.println("O " + this.getPersonagem().getNome() + " morreu"); //passar como string e dar jeito de dar sout no main
+            this.setPersonagem(null);
+            Jogador jogador = this.getPersonagem().getJogador();
+            jogador.setTotalRecursos(jogador.getTotalRecursos() + 1);
             return;
         }
-        this.duracao --;
-        if (this.personagem instanceof Humano) {
-            ArrayList<Efeito> listaEfeitos = this.personagem.listaEfeitosSofridos;
-            Efeito sangramento = new Sangramento(this.personagem); //provavelmente vai dar erro na comparacao pq aponta p outro objeto
+        this.setDuracao(this.getDuracao()-1);
+        if (personagem instanceof Humano) {
+            ArrayList<Efeito> listaEfeitos = personagem.getListaEfeitosSofridos();
+            Efeito sangramento = new Sangramento(personagem); //provavelmente vai dar erro na comparacao pq aponta p outro objeto
             if(listaEfeitos.contains(sangramento)){
                 int indiceDoEfeito;
                 indiceDoEfeito = listaEfeitos.indexOf(sangramento);
                 Efeito sangramentoPersonagem = listaEfeitos.get(indiceDoEfeito);
-                sangramentoPersonagem.duracao += sangramento.duracao;
+                sangramentoPersonagem.setDuracao(sangramento.getDuracao() + sangramento.getDuracao());
                 return;
             }
                 listaEfeitos.add(this);
