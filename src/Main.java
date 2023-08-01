@@ -55,14 +55,18 @@ public class Main {
                                         int indice;
                                         do {
                                             System.out.println(cartaSelecionada.mostrarEfeitosCausados());
+                                            if(cartaSelecionada.getListaEfeitosCausados()!=null) {
                                             indice = sc.nextInt();
                                             if (indice != 0) {
-                                                if (indice > cartaSelecionada.getListaEfeitosCausados().size() ||
-                                                        indice < 0) {
-                                                    System.out.println("\tInsira uma opcao válida\n");
-                                                } else {
-                                                    System.out.println(cartaSelecionada.getListaEfeitosCausados().get(indice - 1));
+                                                    if (indice > cartaSelecionada.getListaEfeitosCausados().size() ||
+                                                            indice < 0) {
+                                                        System.out.println("\tInsira uma opcao válida\n");
+                                                    } else {
+                                                        System.out.println(cartaSelecionada.getListaEfeitosCausados().get(indice - 1));
+                                                    }
                                                 }
+                                            } else {
+                                                indice = 0;
                                             }
                                         }while(indice != 0);
                                     }
@@ -71,14 +75,18 @@ public class Main {
                                         int indice;
                                         do {
                                             System.out.println(cartaSelecionada.mostrarEfeitosSofridos());
+                                            if(cartaSelecionada.getListaEfeitosSofridos()!= null) {
                                             indice = sc.nextInt();
                                             if (indice != 0) {
-                                                if (indice > cartaSelecionada.getListaEfeitosSofridos().size() ||
-                                                        indice < 0) {
-                                                    System.out.println("\tInsira uma opcao válida\n");
-                                                } else {
-                                                    System.out.println(cartaSelecionada.getEfeitosSofridos().get(indice - 1));
+                                                    if (indice > cartaSelecionada.getListaEfeitosSofridos().size() ||
+                                                            indice < 0) {
+                                                        System.out.println("\tInsira uma opcao válida\n");
+                                                    } else {
+                                                        System.out.println(cartaSelecionada.getEfeitosSofridos().get(indice - 1));
+                                                    }
                                                 }
+                                            } else {
+                                                indice = 0;
                                             }
                                         }while(indice != 0);
                                     }

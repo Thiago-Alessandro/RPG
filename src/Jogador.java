@@ -59,7 +59,7 @@ public class Jogador {
 
     public String mostrarEstatisticas(){
         return "Total Recursos: " + this.totalRecursos +
-               "Cartas restantes no baralho: " + this.cartasDeck.size();
+               "\nCartas restantes no baralho: " + this.cartasDeck.size();
     }
 
     @Override

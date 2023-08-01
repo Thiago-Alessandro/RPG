@@ -65,7 +65,7 @@ public class Partida {
         for(int x = 0; x < 5; x ++){
             for(int y  = 0; y < 4; y++){
                 Personagem personagem = tabuleiro[y][x];
-                if(personagem!=null){
+                if(personagem!=null && personagem.getEfeitosSofridos()!= null){
                     for (Efeito efeito : personagem.getEfeitosSofridos()){
                         efeito.efetuar();
                     }

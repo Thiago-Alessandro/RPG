@@ -104,23 +104,32 @@ public abstract class Personagem {
     }
 
     public String mostrarEfeitosSofridos(){
-        String efeitosSofridos = "";
-        int indice = 1;
-        for(Efeito efeito : this.listaEfeitosSofridos){
-            efeitosSofridos += "\n" + indice + " - " + efeito.getNome();
-            indice++;
+        if(this.listaEfeitosSofridos!=null) {
+            String efeitosSofridos = "";
+            int indice = 1;
+            for (Efeito efeito : this.listaEfeitosSofridos) {
+                efeitosSofridos += "\n" + indice + " - " + efeito.getNome();
+                indice++;
+            }
+            return efeitosSofridos;
+        } else {
+            return this.nome + " não possui efeitos sofridos\n";
         }
-        return efeitosSofridos;
     }
 
     public String mostrarEfeitosCausados(){
-        String efeitosCausados = "";
-        int indice = 1;
-        for(Efeito efeito : this.listaEfeitosCausados){
-            efeitosCausados += "\n" + indice + " - " + efeito.getNome();
-            indice++;
+        if(this.listaEfeitosCausados!=null) {
+            String efeitosCausados = "";
+            int indice = 1;
+            for (Efeito efeito : this.listaEfeitosCausados) {
+                efeitosCausados += "\n" + indice + " - " + efeito.getNome();
+                indice++;
+            }
+            return efeitosCausados;
+        } else {
+            return this.nome + " não possui efeitos\n";
         }
-        return efeitosCausados;
+
     }
 
     //region getter e setters
@@ -209,11 +218,11 @@ public abstract class Personagem {
     public Personagem getAliadoADireita(Partida partida){
 
         if(partida.getJogador1() == this.jogador){
-            if(partida.getTabuleiro()[this.y][this.x+1]!=null){
+            if(this.getX()+1<5 && partida.getTabuleiro()[this.y][this.x+1]!=null){
                 return partida.getTabuleiro()[this.y][this.x+1];
             }
         } else {
-            if(partida.getTabuleiro()[this.y][this.x-1]!=null){
+            if(this.getX()-1>0 && partida.getTabuleiro()[this.y][this.x-1]!=null){
                 return partida.getTabuleiro()[this.y][this.x-1];
             }
         }
@@ -223,11 +232,11 @@ public abstract class Personagem {
     public Personagem getAliadoAEsquerda(Partida partida){
 
         if(partida.getJogador1() == this.jogador){
-            if(partida.getTabuleiro()[this.y][this.x-1]!=null){
+            if(this.getX()-1>0 && partida.getTabuleiro()[this.y][this.x-1]!=null){
                 return partida.getTabuleiro()[this.y][this.x-1];
             }
         } else {
-            if(partida.getTabuleiro()[this.y][this.x+1]!=null){
+            if(this.getX()+1<5 && partida.getTabuleiro()[this.y][this.x+1]!=null){
                 return partida.getTabuleiro()[this.y][this.x+1];
             }
         }
@@ -256,6 +265,10 @@ public abstract class Personagem {
 
     public int getCusto() {
         return custo;
+    }
+
+    public int getX(){
+        return x;
     }
 
     public void setX(int x) {

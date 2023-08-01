@@ -16,11 +16,17 @@ public class Floricultora extends Humano{
         Personagem aliadoADireita = getAliadoADireita(partida);
         Personagem aliadoAEsquerda = getAliadoAEsquerda(partida);
         if(this.getY() == 1 || this.getY() ==2) {
-            if (aliadoADireita == null) {
-                aliadoADireita = new Roseira(partida.getJogadorDaVez());
+            if (aliadoADireita == null && this.getJogador() == partida.getJogador1() && this.getX()+1<5 ) {
+                partida.getTabuleiro()[this.getY()][this.getX()+1] = new Roseira(partida.getJogadorDaVez());
+            } else if (aliadoADireita == null && this.getX()-1>=0){
+                partida.getTabuleiro()[this.getY()][this.getX()-1] = new Roseira(partida.getJogadorDaVez());
             }
             if (aliadoAEsquerda == null) {
-                aliadoAEsquerda = new Roseira(partida.getJogadorDaVez());
+                if(aliadoAEsquerda == null && this.getJogador() == partida.getJogador1() && this.getX()-1>=0 ){
+                    partida.getTabuleiro()[this.getY()][this.getX()-1] = new Roseira(partida.getJogadorDaVez());
+                } else if (aliadoAEsquerda == null && this.getX()+1<5){
+                    partida.getTabuleiro()[this.getY()][this.getX()+1] = new Roseira(partida.getJogadorDaVez());
+                }
             }
         }
         if(aliadoADireita != null && aliadoAEsquerda != null){
