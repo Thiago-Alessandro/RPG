@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+
 public class Partida {
 
-    public Partida(Jogador jogador1,Jogador jogador2){
-        this.jogador1 = jogador1;
-        this.jogador2 = jogador2;
+    public Partida(ArrayList<Jogador> jogadores){
+
+        this.jogador1 = jogadores.get(0);
+        this.jogador2 = jogadores.get(1);
         this.pontuacao = 0;
         this.turno = 1;
         this.jogadorDaVez = jogador1;

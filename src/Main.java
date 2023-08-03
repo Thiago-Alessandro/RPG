@@ -4,23 +4,21 @@ import java.util.Scanner;
 public class Main {
         static Scanner sc = new Scanner(System.in);
 
+        private static final ArrayList<Jogador> jogadores = new ArrayList<>();
+
     public static void main(String[] args) {
 
-        Jogador jogador1;
-        Jogador jogador2;
+        for (int i = 1; i <= 2; i++) {
 
-        System.out.println("\tInsira o nome do jogador 1: ");
-        String nome = sc.next();
-        jogador1 = new Jogador(nome);
+            System.out.println("\tInsira o nome do jogador " + i + ": ");
+            String nome = sc.next();
+            jogadores.add( new Jogador(nome));
+        }
 
-        System.out.println("\tInsira o nome do jogador 2: ");
-        nome = sc.next();
-        jogador2 = new Jogador(nome);
+        Partida partida = new Partida(jogadores);
 
-        Partida partida = new Partida(jogador1, jogador2);
-
-        System.out.println("\n\t" + jogador1.getNome() + " faça +10 pontos para vencer");
-        System.out.println("\n\t" + jogador2.getNome() + " faça -10 pontos para vencer");
+        System.out.println("\n\t" + jogadores.get(0).getNome() + " faça +10 pontos para vencer");
+        System.out.println("\n\t" + jogadores.get(1).getNome() + " faça -10 pontos para vencer");
         do{
             Jogador jogadorDaVez = partida.getJogadorDaVez();
             System.out.println("\n\tTurno: " + partida.getTurno());
@@ -99,9 +97,7 @@ public class Main {
                         }
                     }
                     case 2 -> {
-                        if (sacrificarPersonagem(partida)) {
-                            primeiraJogada = false;
-                        }
+                        primeiraJogada = !sacrificarPersonagem(partida);
                     }
                     case 3 -> {
                         if (jogadorDaVez.getCartasDeck().size() > 0) {
@@ -202,31 +198,35 @@ public class Main {
 
     private static void posicionarCarta(Partida partida, Personagem carta){
         int coluna;
+        int linha = 3;
         if(partida.getJogador1() == partida.getJogadorDaVez()) {
-            do {
-                System.out.println("\tEm qual coluna deseja posicionar sua carta");
-                coluna = sc.nextInt();
-                if (coluna < 1 || coluna > 5) {
-                    System.out.println("\tInsira uma coluna valida");
-                } else if (partida.getTabuleiro()[0][coluna - 1] != null) {
-                    System.out.println("\tInsira uma posica que esteja livre!\n");
-                }
-            } while (coluna < 1 || coluna > 5 || partida.getTabuleiro()[0][coluna - 1] != null);
-            partida.getTabuleiro()[0][coluna-1] = carta;
-            carta.setY(0);
-        } else{
-            do {
-                System.out.println("\tEm qual coluna deseja posicionar sua carta");
-                coluna = sc.nextInt();
-                if (coluna < 1 || coluna > 5) {
-                    System.out.println("\tInsira uma coluna valida");
-                } else if (partida.getTabuleiro()[3][coluna - 1] != null) {
-                    System.out.println("\tInsira uma posica que esteja livre!\n");
-                }
-            } while (coluna < 1 || coluna > 5 || partida.getTabuleiro()[3][coluna - 1] != null);
-            partida.getTabuleiro()[3][coluna-1] = carta;
-            carta.setY(3);
+            linha = 0;
         }
+            do {
+                System.out.println("\tEm qual coluna deseja posicionar sua carta");
+                coluna = sc.nextInt();
+                if (coluna < 1 || coluna > 5) {
+                    System.out.println("\tInsira uma coluna valida");
+                } else if (partida.getTabuleiro()[linha][coluna - 1] != null) {
+                    System.out.println("\tInsira uma posica que esteja livre!\n");
+                }
+            } while (coluna < 1 || coluna > 5 || partida.getTabuleiro()[linha][coluna - 1] != null);
+            partida.getTabuleiro()[linha][coluna-1] = carta;
+            carta.setY(linha);
+
+//       } else{
+//            do {
+//                System.out.println("\tEm qual coluna deseja posicionar sua carta");
+//                coluna = sc.nextInt();
+//                if (coluna < 1 || coluna > 5) {
+//                    System.out.println("\tInsira uma coluna valida");
+//                } else if (partida.getTabuleiro()[3][coluna - 1] != null) {
+//                    System.out.println("\tInsira uma posica que esteja livre!\n");
+//                }
+//            } while (coluna < 1 || coluna > 5 || partida.getTabuleiro()[3][coluna - 1] != null);
+//            partida.getTabuleiro()[3][coluna-1] = carta;
+//            carta.setY(3);
+//        }
         carta.setX(coluna-1);
         carta.setJogador(partida.getJogadorDaVez()); //da p tirar isso daqui no futuro e colocar qnd as cartas forem atribuidas ao jogador
         ArrayList<Personagem> arrayAtualizaddo = partida.getJogadorDaVez().getCartasNaMao();
@@ -234,6 +234,11 @@ public class Main {
         partida.getJogadorDaVez().setCartasNaMao(arrayAtualizaddo);
         partida.getJogadorDaVez().setTotalRecursos(partida.getJogadorDaVez().getTotalRecursos() - carta.getCusto());
 
+    }
+
+    private static boolean verificaLinhaInvalida(Partida partida, int linha){
+        return partida.getJogadorDaVez() == partida.getJogador1() && linha != 1 && linha != 2 ||
+                partida.getJogadorDaVez() == partida.getJogador2() && linha != 3 && linha != 4;
     }
 
     private static boolean sacrificarPersonagem(Partida partida){
@@ -244,12 +249,10 @@ public class Main {
             do {
                 System.out.println("\tDeseja sacrificar o personagem de qual linha?");
                 linha = sc.nextInt();
-                if(partida.getJogadorDaVez() == partida.getJogador1() && linha != 1 && linha != 2 ||
-                   partida.getJogadorDaVez() == partida.getJogador2() && linha != 3 && linha != 4){
+                if(verificaLinhaInvalida(partida, linha)){
                     System.out.println("\tSelecione uma linha em que possa haver um personagem seu!");
                 }
-            } while (partida.getJogadorDaVez() == partida.getJogador1() && linha != 1 && linha != 2 ||
-                     partida.getJogadorDaVez() == partida.getJogador2() && linha != 3 && linha != 4);
+            } while (verificaLinhaInvalida(partida, linha));
             do {
                 System.out.println("\tDeseja sacrificar o personagem de qual coluna?");
                 coluna = sc.nextInt();
