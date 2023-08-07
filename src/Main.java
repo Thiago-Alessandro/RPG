@@ -30,96 +30,9 @@ public class Main {
             do {
                 System.out.println(partida.mostrarTabuleiro());
                 switch (menuOpcoes()) {
-                    case 1 -> {
-                        Personagem cartaSelecionada = selecionarCarta(jogadorDaVez);
-                        if (cartaSelecionada != null) {
-                            boolean voltar = false;
-
-                            do {
-                                switch (menuCarta(cartaSelecionada)) {
-                                    case 1 -> {
-                                        if (jogadorDaVez.getTotalRecursos() - cartaSelecionada.getCusto() >= 0) {
-                                            System.out.println(partida.mostrarTabuleiro());
-                                            posicionarCarta(partida, cartaSelecionada);
-                                            primeiraJogada = false;
-                                            voltar = true;
-                                        } else {
-                                            System.out.println("\tVocê não possui recursos suficientes!\n");
-                                        }
-                                    }
-                                    case 2 -> System.out.println(cartaSelecionada.mostrarDetalhes());
-                                    case 3 -> System.out.println(cartaSelecionada.getDescricao());
-                                    case 4 -> {
-                                        int indice;
-                                        do {
-                                            System.out.println(cartaSelecionada.mostrarEfeitosCausados());
-                                            if(cartaSelecionada.getListaEfeitosCausados()!=null) {
-                                            indice = sc.nextInt();
-                                            if (indice != 0) {
-                                                    if (indice > cartaSelecionada.getListaEfeitosCausados().size() ||
-                                                            indice < 0) {
-                                                        System.out.println("\tInsira uma opcao válida\n");
-                                                    } else {
-                                                        System.out.println(cartaSelecionada.getListaEfeitosCausados().get(indice - 1));
-                                                    }
-                                                }
-                                            } else {
-                                                indice = 0;
-                                            }
-                                        }while(indice != 0);
-                                    }
-                                    case 5 ->
-                                    {
-                                        int indice;
-                                        do {
-                                            System.out.println(cartaSelecionada.mostrarEfeitosSofridos());
-                                            if(cartaSelecionada.getListaEfeitosSofridos()!= null) {
-                                            indice = sc.nextInt();
-                                            if (indice != 0) {
-                                                    if (indice > cartaSelecionada.getListaEfeitosSofridos().size() ||
-                                                            indice < 0) {
-                                                        System.out.println("\tInsira uma opcao válida\n");
-                                                    } else {
-                                                        System.out.println(cartaSelecionada.getEfeitosSofridos().get(indice - 1));
-                                                    }
-                                                }
-                                            } else {
-                                                indice = 0;
-                                            }
-                                        }while(indice != 0);
-                                    }
-                                    case 0 -> voltar = true;
-                                    default -> System.out.println("\tInsira uma opção válida!\n");
-                                }
-                            } while (!voltar);
-                        } else {
-                            System.out.println("Você não possui cartas na mão, compre uma!");
-                        }
-                    }
-                    case 2 -> {
-                        primeiraJogada = !sacrificarPersonagem(partida);
-                    }
-                    case 3 -> {
-                        if (jogadorDaVez.getCartasDeck().size() > 0) {
-                            Personagem cartaComprada = jogadorDaVez.comprarCarta();
-                            if (cartaComprada != null) {
-                                System.out.println("\tVocê comprou: " + cartaComprada.getNome() + "!");
-                                System.out.println("\tSeus recursos agora são: " + jogadorDaVez.getTotalRecursos() + "\n");
-                                System.out.println("\tSeu baralho agora tem: " + jogadorDaVez.getCartasDeck().size() + " cartas\n");
-                                primeiraJogada = false;
-                            } else {
-                                System.out.println("""
-                                        \tVocê não tem recursos suficientes!
-                                         \tTente sacrificar um personagem ou procurar recursos
-                                        """);
-                            }
-                        } else {
-                            System.out.println("""
-                                    \tOps parece que acabaram suas cartas
-                                    \tEspere por um guerreiro corajoso que se junte à batalha!
-                                    """);
-                        }
-                    }
+                    case 1 -> { if(mostrarOpcoesCarta(jogadorDaVez, partida, primeiraJogada)){ primeiraJogada = false; } }
+                    case 2 -> primeiraJogada = !sacrificarPersonagem(partida);
+                    case 3 -> {if(comprarCarta(jogadorDaVez)){ primeiraJogada = false; } }
                     case 4 -> System.out.println(jogadorDaVez.mostrarEstatisticas());
                     case 5 -> System.out.println(partida.mostrarEstatisticas());
                     case 6 -> {
@@ -140,14 +53,7 @@ public class Main {
                     default -> System.out.println("\nInsira uma opção válida!\n");
                 }
             }while(!terminarTurno);
-            partida.alternarJogadorDaVez();
-            //cada 2 turnos sem contar o primneiro adiciona um guerreiro
-            if(partida.getTurno() != 1 && partida.getTurno() % 2 == 1){
-                ArrayList<Personagem> maoAtualizada = jogadorDaVez.getCartasNaMao();
-                maoAtualizada.add(new Guerreiro(jogadorDaVez));
-                jogadorDaVez.setCartasNaMao(maoAtualizada);
-                System.out.println("\tUm guerreiro se juntou à batalha!\n");
-            }
+            realizarAcoesDeFimDeTurno(partida, jogadorDaVez);
         }while(partida.getVencedor() == null);
         System.out.println("\tParabéns " + partida.getVencedor().getNome() + "! Você ganhou!\n");
     }
@@ -191,7 +97,7 @@ public class Main {
                 4 - Ver efeitos
                 5 - Ver efeitos sofridos
                 0 - Voltar
-                \n
+                
                 """, carta.getNome());
         return sc.nextInt();
     }
@@ -208,7 +114,7 @@ public class Main {
                 if (coluna < 1 || coluna > 5) {
                     System.out.println("\tInsira uma coluna valida");
                 } else if (partida.getTabuleiro()[linha][coluna - 1] != null) {
-                    System.out.println("\tInsira uma posica que esteja livre!\n");
+                    System.out.println("\tInsira uma posicao que esteja livre!\n");
                 }
             } while (coluna < 1 || coluna > 5 || partida.getTabuleiro()[linha][coluna - 1] != null);
             partida.getTabuleiro()[linha][coluna-1] = carta;
@@ -239,6 +145,37 @@ public class Main {
     private static boolean verificaLinhaInvalida(Partida partida, int linha){
         return partida.getJogadorDaVez() == partida.getJogador1() && linha != 1 && linha != 2 ||
                 partida.getJogadorDaVez() == partida.getJogador2() && linha != 3 && linha != 4;
+    }
+
+    private static boolean mostrarOpcoesCarta(Jogador jogadorDaVez, Partida partida, boolean primeiraJogada){
+        Personagem cartaSelecionada = selecionarCarta(jogadorDaVez);
+        if (cartaSelecionada != null) {
+            boolean voltar = false;
+
+            do {
+                switch (menuCarta(cartaSelecionada)) {
+                    case 1 -> {
+                        if (jogadorDaVez.getTotalRecursos() - cartaSelecionada.getCusto() >= 0) {
+                            System.out.println(partida.mostrarTabuleiro());
+                            posicionarCarta(partida, cartaSelecionada);
+                            primeiraJogada = false;
+                            voltar = true;
+                        } else {
+                            System.out.println("\tVocê não possui recursos suficientes!\n");
+                        }
+                    }
+                    case 2 -> System.out.println(cartaSelecionada.mostrarDetalhes());
+                    case 3 -> System.out.println(cartaSelecionada.getDescricao());
+                    case 4 -> mostrarEfeitos(cartaSelecionada);
+                    case 5 -> mostrarEfeitosSofridos(cartaSelecionada);
+                    case 0 -> voltar = true;
+                    default -> System.out.println("\tInsira uma opção válida!\n");
+                }
+            } while (!voltar);
+        } else {
+            System.out.println("Você não possui cartas na mão, compre uma!");
+        }
+        return primeiraJogada;
     }
 
     private static boolean sacrificarPersonagem(Partida partida){
@@ -282,4 +219,80 @@ public class Main {
         }while(partida.getTabuleiro()[linha-1][coluna-1] == null);
         return false;
     }
+
+    private static boolean comprarCarta(Jogador jogadorDaVez){
+
+        if (jogadorDaVez.getCartasDeck().size() > 0) {
+            Personagem cartaComprada = jogadorDaVez.comprarCarta();
+            if (cartaComprada != null) {
+                System.out.println("\tVocê comprou: " + cartaComprada.getNome() + "!");
+                System.out.println("\tSeus recursos agora são: " + jogadorDaVez.getTotalRecursos() + "\n");
+                System.out.println("\tSeu baralho agora tem: " + jogadorDaVez.getCartasDeck().size() + " cartas\n");
+                return true;
+            } else {
+                System.out.println("""
+                                        \tVocê não tem recursos suficientes!
+                                         \tTente sacrificar um personagem ou procurar recursos
+                                        """);
+            }
+        } else {
+            System.out.println("""
+                                    \tOps parece que acabaram suas cartas
+                                    \tEspere por um guerreiro corajoso que se junte à batalha!
+                                    """);
+        }
+        return false;
+    }
+
+    private static void mostrarEfeitos(Personagem cartaSelecionada){
+        int indice;
+        do {
+            System.out.println(cartaSelecionada.mostrarEfeitosCausados());
+            if(cartaSelecionada.getListaEfeitosCausados()!=null) {
+                indice = sc.nextInt();
+                if (indice != 0) {
+                    if (indice > cartaSelecionada.getListaEfeitosCausados().size() ||
+                            indice < 0) {
+                        System.out.println("\tInsira uma opcao válida\n");
+                    } else {
+                        System.out.println(cartaSelecionada.getListaEfeitosCausados().get(indice - 1));
+                    }
+                }
+            } else {
+                indice = 0;
+            }
+        }while(indice != 0);
+    }
+
+    private static void mostrarEfeitosSofridos(Personagem cartaSelecionada){
+        int indice;
+        do {
+            System.out.println(cartaSelecionada.mostrarEfeitosSofridos());
+            if(cartaSelecionada.getListaEfeitosSofridos()!= null) {
+                indice = sc.nextInt();
+                if (indice != 0) {
+                    if (indice > cartaSelecionada.getListaEfeitosSofridos().size() ||
+                            indice < 0) {
+                        System.out.println("\tInsira uma opcao válida\n");
+                    } else {
+                        System.out.println(cartaSelecionada.getEfeitosSofridos().get(indice - 1));
+                    }
+                }
+            } else {
+                indice = 0;
+            }
+        }while(indice != 0);
+    }
+
+    private static void realizarAcoesDeFimDeTurno(Partida partida, Jogador jogadorDaVez){
+        partida.alternarJogadorDaVez();
+        //cada 2 turnos sem contar o primneiro adiciona um guerreiro
+        if(partida.getTurno() != 1 && partida.getTurno() % 2 == 1){
+            ArrayList<Personagem> maoAtualizada = jogadorDaVez.getCartasNaMao();
+            maoAtualizada.add(new Guerreiro(jogadorDaVez));
+            jogadorDaVez.setCartasNaMao(maoAtualizada);
+            System.out.println("\tUm guerreiro se juntou à batalha!\n");
+        }
+    }
 }
+
